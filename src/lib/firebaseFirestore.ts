@@ -14,7 +14,8 @@ import firebaseConfig from "../../firebase-applet-config.json";
 import { Complaint, Officer, Manager, ActivityLog } from "../types";
 
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app, (firebaseConfig as any).firestoreDatabaseId);
+const dbDatabaseId = (firebaseConfig as any).firestoreDatabaseId;
+export const db = dbDatabaseId ? getFirestore(app, dbDatabaseId) : getFirestore(app);
 export const auth = getAuth(app);
 
 // Test connection on boot as mandated by the firebase-integration skill
@@ -23,7 +24,9 @@ async function testConnection() {
     await getDocFromServer(doc(db, 'test', 'connection'));
   } catch (error) {
     if (error instanceof Error && error.message.includes('the client is offline')) {
-      console.error("Please check your Firebase configuration.");
+      console.warn("Firebase Firestore is currently offline or unreachable.");
+    } else {
+      console.warn("Firestore test connection check:", error);
     }
   }
 }
