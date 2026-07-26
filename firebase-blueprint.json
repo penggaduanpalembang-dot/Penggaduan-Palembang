@@ -1,0 +1,93 @@
+{
+  "entities": {
+    "complaint": {
+      "title": "Complaint",
+      "description": "Pengaduan Pelayanan Kantor Pertanahan Kota Palembang",
+      "type": "object",
+      "properties": {
+        "ID_PENGADUAN": { "type": "string" },
+        "TGL_PENGADUAN": { "type": "string" },
+        "NAMA_PELAPOR": { "type": "string" },
+        "HP": { "type": "string" },
+        "NO_BERKAS": { "type": "string" },
+        "PETUGAS_LAPANGAN": { "type": "string" },
+        "JENIS_LAYANAN": { "type": "string" },
+        "KATEGORI": { "type": "string" },
+        "URAIAN": { "type": "string" },
+        "FOTO_BUKTI": { "type": "string" },
+        "STATUS": { "type": "string" },
+        "MANAGER_VERIFIKASI": { "type": "string" },
+        "TGL_VERIFIKASI": { "type": "string" },
+        "PETUGAS_PENANGGUNG_JAWAB": { "type": "string" },
+        "TGL_TINDAKLANJUT": { "type": "string" },
+        "KENDALA": { "type": "string" },
+        "ANALISIS": { "type": "string" },
+        "TINDAKAN": { "type": "string" },
+        "TARGET_SELESAI": { "type": "string" },
+        "BUKTI_TINDAKLANJUT": { "type": "string" },
+        "CATATAN_PETUGAS": { "type": "string" },
+        "HASIL_PENYELESAIAN": { "type": "string" },
+        "TGL_SELESAI": { "type": "string" },
+        "BUKTI_PENYELESAIAN": { "type": "string" }
+      },
+      "required": ["ID_PENGADUAN", "TGL_PENGADUAN", "NAMA_PELAPOR", "STATUS"]
+    },
+    "officer": {
+      "title": "Officer",
+      "description": "Master Petugas Pelaksana",
+      "type": "object",
+      "properties": {
+        "ID_PETUGAS": { "type": "string" },
+        "NAMA_PETUGAS": { "type": "string" },
+        "JABATAN": { "type": "string" },
+        "UNIT_KERJA": { "type": "string" },
+        "EMAIL": { "type": "string" },
+        "STATUS": { "type": "string" }
+      },
+      "required": ["ID_PETUGAS", "NAMA_PETUGAS", "EMAIL", "STATUS"]
+    },
+    "manager": {
+      "title": "Manager",
+      "description": "Master Manager Loket",
+      "type": "object",
+      "properties": {
+        "ID_MANAGER": { "type": "string" },
+        "NAMA_MANAGER": { "type": "string" },
+        "EMAIL": { "type": "string" },
+        "JABATAN": { "type": "string" }
+      },
+      "required": ["ID_MANAGER", "NAMA_MANAGER", "EMAIL"]
+    },
+    "log": {
+      "title": "ActivityLog",
+      "description": "Log Aktivitas Sistem Pengaduan",
+      "type": "object",
+      "properties": {
+        "TANGGAL": { "type": "string" },
+        "USER": { "type": "string" },
+        "AKTIVITAS": { "type": "string" },
+        "ID_PENGADUAN": { "type": "string" },
+        "KETERANGAN": { "type": "string" }
+      },
+      "required": ["TANGGAL", "USER", "AKTIVITAS", "ID_PENGADUAN"]
+    }
+  },
+  "firestore": {
+    "/complaints/{complaintId}": {
+      "schema": "complaint",
+      "description": "Daftar pengaduan masyarakat"
+    },
+    "/officers/{officerId}": {
+      "schema": "officer",
+      "description": "Master data petugas pelaksana"
+    },
+    "/managers/{managerId}": {
+      "schema": "manager",
+      "description": "Master data manager loket pelayanan"
+    },
+    "/logs/{logId}": {
+      "schema": "log",
+      "description": "Log aktivitas audit sistem"
+    }
+  }
+}

@@ -1,0 +1,84 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Catch-all secure default gate
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Common Global Helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Validation blueprints
+    function isValidComplaint(data) {
+      return data.ID_PENGADUAN is string
+        && data.TGL_PENGADUAN is string
+        && data.NAMA_PELAPOR is string
+        && data.NAMA_PELAPOR.size() <= 200
+        && data.STATUS is string;
+    }
+
+    function isValidOfficer(data) {
+      return data.ID_PETUGAS is string
+        && data.NAMA_PETUGAS is string
+        && data.EMAIL is string
+        && data.STATUS is string;
+    }
+
+    function isValidManager(data) {
+      return data.ID_MANAGER is string
+        && data.NAMA_MANAGER is string
+        && data.EMAIL is string;
+    }
+
+    function isValidLog(data) {
+      return data.TANGGAL is string
+        && data.USER is string
+        && data.AKTIVITAS is string
+        && data.ID_PENGADUAN is string;
+    }
+
+    // Match rules for Collections
+    match /complaints/{complaintId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(complaintId) && isValidComplaint(incoming());
+      allow update: if isSignedIn() && isValidComplaint(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /officers/{officerId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(officerId) && isValidOfficer(incoming());
+      allow update: if isSignedIn() && isValidOfficer(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /managers/{managerId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(managerId) && isValidManager(incoming());
+      allow update: if isSignedIn() && isValidManager(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /logs/{logId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(logId) && isValidLog(incoming());
+      allow update: if isSignedIn() && isValidLog(incoming());
+      allow delete: if isSignedIn();
+    }
+  }
+}
